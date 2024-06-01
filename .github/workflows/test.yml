@@ -1,0 +1,38 @@
+name: Packer Validate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  packer_validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: latest
+
+      - name: Run `packer init`
+        id: init
+        run: "packer init ./webapp.pkr.hcl"
+
+      - name: Run `packer validate`
+        id: validate
+        run: |
+          if ! packer validate ./webapp.pkr.hcl ; then
+            echo "Validation check failed"
+            exit 1
+          fi
+
+      - name: Run `packer fmt`
+        id: fmt
+        run: |
+          if ! packer fmt -check ./webapp.pkr.hcl ; then
+            echo "Formatting check failed"
+            exit 1
+          fi
