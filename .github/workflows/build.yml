@@ -20,10 +20,13 @@ jobs:
         with:
           version: latest
 
+      - name: Run `packer init`
+        id: init
+        run: "packer init ./jenkins-ami.pkr.hcl"
+
       - name: Run `packer build`
         id: build
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.GHACTIONS_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.GHACTIONS_AWS_SECRET_ACCESS_KEY }}
-
         run: packer build -var "profile=${{ secrets.GHACTIONS_JENKINS_AMI_PROFILE }}" -var "ami_user=${{ secrets.GHACTIONS_JENKINS_AMI_USERS }}" ./jenkins-ami.pkr.hcl
