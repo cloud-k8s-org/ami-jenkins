@@ -26,4 +26,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.GHACTIONS_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.GHACTIONS_AWS_SECRET_ACCESS_KEY }}
 
-        run: packer build -var "profile=${{ secrets.GHACTIONS_JENKINS_AMI_PROFILE }}" -var "ami_users=${{ secrets.GHACTIONS_JENKINS_AMI_USERS }}" ./jenkins-ami.pkr.hcl
+        run: packer build -var "profile=${{ secrets.GHACTIONS_JENKINS_AMI_PROFILE }}" -var "ami_user=${{ secrets.GHACTIONS_JENKINS_AMI_USERS }}" ./jenkins-ami.pkr.hcl
