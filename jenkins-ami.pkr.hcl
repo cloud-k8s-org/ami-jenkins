@@ -36,6 +36,14 @@ variable "instance_type" {
   default = "t2.micro"
 }
 
+variable "jenkins_username" {
+  type = string
+}
+
+variable "jenkins_password" {
+  type = string
+}
+
 source "amazon-ebs" "jenkins-ami" {
   ami_name      = "${var.ami_name}-{{timestamp}}"
   instance_type = var.instance_type
@@ -62,10 +70,48 @@ build {
     destination = "/tmp/install_script.sh"
   }
 
+  provisioner "file" {
+    source      = "create_jenkins_user.sh"
+    destination = "/tmp/create_jenkins_user.sh"
+  }
+
+  provisioner "file" {
+    source      = "InitJenkins.groovy"
+    destination = "/tmp/InitJenkins.groovy"
+  }
+
+  provisioner "file" {
+    source      = "JenkinsPlugins.txt"
+    destination = "/tmp/JenkinsPlugins.txt"
+  }
+
+  provisioner "file" {
+    source      = "install_plugins.sh"
+    destination = "/tmp/install_plugins.sh"
+  }
+
   provisioner "shell" {
     inline = [
       "chmod +x /tmp/install_script.sh",
       "/tmp/install_script.sh"
+    ]
+  }
+
+  provisioner "shell" {
+    environment_vars = [
+      "JENKINS_USERNAME=${var.jenkins_username}",
+      "JENKINS_PASSWORD=${var.jenkins_password}"
+    ]
+    inline = [
+      "chmod +x /tmp/create_jenkins_user.sh",
+      "/tmp/create_jenkins_user.sh"
+    ]
+  }
+
+  provisioner "shell" {
+    inline = [
+      "chmod +x /tmp/install_plugins.sh",
+      "/tmp/install_plugins.sh"
     ]
   }
 }
