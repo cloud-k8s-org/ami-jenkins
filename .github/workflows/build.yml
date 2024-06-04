@@ -38,5 +38,4 @@ jobs:
           -var "profile=${{ secrets.GHACTIONS_JENKINS_AMI_PROFILE }}" \ 
           -var "ami_user=${{ secrets.GHACTIONS_JENKINS_AMI_USERS }}" \ 
           -var "jenkins_username=${{ secrets.GHACTIONS_JENKINS_USERNAME }}" \ 
-          -var "jenkins_password=${{ secrets.GHACTIONS_JENKINS_PASSWORD }}" \ 
-          ./jenkins-ami.pkr.hcl
+          -var "jenkins_password=${{ secrets.GHACTIONS_JENKINS_PASSWORD }}" ./jenkins-ami.pkr.hcl
