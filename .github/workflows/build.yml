@@ -1,18 +1,17 @@
 name: Build Jenkins AMI
 
-#on:
-#  pull_request:
-#    types: [ closed ]
-#    branches:
-#      - main
-
 on:
   pull_request:
-    branches: [ main ]
+    types: [ closed ]
+    branches:
+      - main
+
+#on:
+#  pull_request:
+#    branches: [ main ]
 
 jobs:
   merge:
-    #    if: github.event.pull_request.merged
     runs-on: ubuntu-latest
 
     steps:
