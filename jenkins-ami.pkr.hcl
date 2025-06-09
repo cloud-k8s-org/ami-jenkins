@@ -36,14 +36,6 @@ variable "instance_type" {
   default = "t2.micro"
 }
 
-variable "jenkins_username" {
-  type = string
-}
-
-variable "jenkins_password" {
-  type = string
-}
-
 source "amazon-ebs" "jenkins-ami" {
   ami_name      = "${var.ami_name}-{{timestamp}}"
   instance_type = var.instance_type
@@ -54,64 +46,28 @@ source "amazon-ebs" "jenkins-ami" {
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
-    owners      = ["099720109477"]
+    owners = ["099720109477"]
     most_recent = true
   }
   ssh_username = var.ssh_username
-  ami_users    = [var.ami_user]
+  ami_users = [var.ami_user]
   profile      = var.profile
 }
 
 build {
   sources = ["source.amazon-ebs.jenkins-ami"]
 
-  provisioner "file" {
-    source      = "install_script.sh"
-    destination = "/tmp/install_script.sh"
-  }
-
-  provisioner "file" {
-    source      = "create_jenkins_user.sh"
-    destination = "/tmp/create_jenkins_user.sh"
-  }
-
-  provisioner "file" {
-    source      = "InitJenkins.groovy"
-    destination = "/tmp/InitJenkins.groovy"
-  }
-
-  provisioner "file" {
-    source      = "JenkinsPlugins.txt"
-    destination = "/tmp/JenkinsPlugins.txt"
-  }
-
-  provisioner "file" {
-    source      = "install_plugins.sh"
-    destination = "/tmp/install_plugins.sh"
-  }
-
   provisioner "shell" {
-    inline = [
-      "chmod +x /tmp/install_script.sh",
-      "/tmp/install_script.sh"
-    ]
+    script = "./scripts/script.sh"
   }
 
-  provisioner "shell" {
-    environment_vars = [
-      "JENKINS_USERNAME=${var.jenkins_username}",
-      "JENKINS_PASSWORD=${var.jenkins_password}"
-    ]
-    inline = [
-      "chmod +x /tmp/create_jenkins_user.sh",
-      "/tmp/create_jenkins_user.sh"
-    ]
+  provisioner "file" {
+    source      = "./scripts/jenkins_init"
+    destination = "/home/ubuntu/jenkins_init"
   }
 
-  provisioner "shell" {
-    inline = [
-      "chmod +x /tmp/install_plugins.sh",
-      "/tmp/install_plugins.sh"
-    ]
+  provisioner "file" {
+    source      = "./scripts/jenkins_dsl"
+    destination = "/home/ubuntu/jenkins_dsl"
   }
 }

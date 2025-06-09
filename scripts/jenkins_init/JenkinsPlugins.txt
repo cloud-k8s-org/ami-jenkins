@@ -1,0 +1,11 @@
+ws-cleanup
+workflow-aggregator
+git
+github
+docker-build-publish
+docker-workflow
+docker-plugin
+docker-build-step
+job-dsl
+github-branch-source
+cloudbees-folder
